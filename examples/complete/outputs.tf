@@ -53,3 +53,12 @@ output "access_points" {
   description = "Map of access points created and their attributes"
   value       = module.efs.access_points
 }
+
+################################################################################
+# Replication Configuration
+################################################################################
+
+output "replication_configuration_destination_file_system_id" {
+  description = "The file system ID of the replica"
+  value       = module.efs.replication_configuration_destination_file_system_id
+}

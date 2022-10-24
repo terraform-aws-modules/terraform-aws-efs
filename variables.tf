@@ -155,3 +155,29 @@ variable "access_points" {
   type        = any
   default     = {}
 }
+
+################################################################################
+# Backup Policy
+################################################################################
+
+variable "enable_backup_policy" {
+  description = "Determines whether a backup policy is `ENABLED` or `DISABLED`"
+  type        = bool
+  default     = true
+}
+
+################################################################################
+# Replication Configuration
+################################################################################
+
+variable "create_replication_configuration" {
+  description = "Determines whether a replication configuration is created"
+  type        = bool
+  default     = false
+}
+
+variable "replication_configuration_destination" {
+  description = "A destination configuration block"
+  type        = any
+  default     = {}
+}

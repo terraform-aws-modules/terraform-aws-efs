@@ -53,3 +53,12 @@ output "access_points" {
   description = "Map of access points created and their attributes"
   value       = aws_efs_access_point.this
 }
+
+################################################################################
+# Replication Configuration
+################################################################################
+
+output "replication_configuration_destination_file_system_id" {
+  description = "The file system ID of the replica"
+  value       = try(aws_efs_replication_configuration.this[0].destination[0].file_system_id, null)
+}

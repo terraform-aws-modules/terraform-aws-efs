@@ -187,3 +187,37 @@ resource "aws_efs_access_point" "this" {
 
   tags = merge(var.tags, try(each.value.tags, {}))
 }
+
+################################################################################
+# Backup Policy
+################################################################################
+
+resource "aws_efs_backup_policy" "this" {
+  count = var.create ? 1 : 0
+
+  file_system_id = aws_efs_file_system.this[0].id
+
+  backup_policy {
+    status = var.enable_backup_policy ? "ENABLED" : "DISABLED"
+  }
+}
+
+################################################################################
+# Replication Configuration
+################################################################################
+
+resource "aws_efs_replication_configuration" "this" {
+  count = var.create && var.create_replication_configuration ? 1 : 0
+
+  source_file_system_id = aws_efs_file_system.this[0].id
+
+  dynamic "destination" {
+    for_each = [var.replication_configuration_destination]
+
+    content {
+      availability_zone_name = try(destination.value.availability_zone_name, null)
+      kms_key_id             = try(destination.value.kms_key_id, null)
+      region                 = try(destination.value.region, null)
+    }
+  }
+}
