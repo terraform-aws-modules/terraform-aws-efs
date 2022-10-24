@@ -61,3 +61,37 @@ variable "lifecycle_policy" {
   type        = any
   default     = {}
 }
+
+################################################################################
+# File System Policy
+################################################################################
+
+variable "attach_policy" {
+  description = "Determines whether a policy is attached to the file system"
+  type        = bool
+  default     = true
+}
+
+variable "bypass_policy_lockout_safety_check" {
+  description = "A flag to indicate whether to bypass the `aws_efs_file_system_policy` lockout safety check. Defaults to `false`"
+  type        = bool
+  default     = null
+}
+
+variable "source_policy_documents" {
+  description = "List of IAM policy documents that are merged together into the exported document. Statements must have unique `sid`s"
+  type        = list(string)
+  default     = []
+}
+
+variable "override_policy_documents" {
+  description = "List of IAM policy documents that are merged together into the exported document. In merging, statements with non-blank `sid`s will override statements with the same `sid`"
+  type        = list(string)
+  default     = []
+}
+
+variable "policy_statements" {
+  description = "A map of IAM policy [statements](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document#statement) for custom permission usage"
+  type        = any
+  default     = {}
+}
