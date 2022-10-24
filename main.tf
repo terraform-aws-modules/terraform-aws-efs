@@ -9,12 +9,12 @@ resource "aws_efs_file_system" "this" {
   creation_token                  = var.creation_token
   performance_mode                = var.performance_mode
   encrypted                       = var.encrypted
-  kms_key_id                      = var.kms_key_id
+  kms_key_id                      = var.kms_key_arn
   provisioned_throughput_in_mibps = var.provisioned_throughput_in_mibps
   throughput_mode                 = var.throughput_mode
 
   dynamic "lifecycle_policy" {
-    for_each = var.lifecycle_policy
+    for_each = length(var.lifecycle_policy) > 0 ? [var.lifecycle_policy] : []
 
     content {
       transition_to_ia                    = try(lifecycle_policy.value.transition_to_ia, null)
@@ -22,7 +22,10 @@ resource "aws_efs_file_system" "this" {
     }
   }
 
-  tags = var.tags
+  tags = merge(
+    var.tags,
+    { Name = var.name },
+  )
 }
 
 ################################################################################
@@ -43,7 +46,7 @@ data "aws_iam_policy_document" "policy" {
       actions       = try(statement.value.actions, null)
       not_actions   = try(statement.value.not_actions, null)
       effect        = try(statement.value.effect, null)
-      resources     = try(statement.value.resources, null)
+      resources     = try(statement.value.resources, [aws_efs_file_system.this[0].arn], null)
       not_resources = try(statement.value.not_resources, null)
 
       dynamic "principals" {
@@ -77,9 +80,10 @@ data "aws_iam_policy_document" "policy" {
   }
 
   statement {
-    sid     = "NonSecureTransport"
-    effect  = "Deny"
-    actions = ["*"]
+    sid       = "NonSecureTransport"
+    effect    = "Deny"
+    actions   = ["*"]
+    resources = [aws_efs_file_system.this[0].arn]
 
     principals {
       type        = "AWS"
@@ -119,11 +123,15 @@ resource "aws_efs_mount_target" "this" {
 # Security Group
 ################################################################################
 
-resource "aws_security_group" "this" {
-  count = var.create && var.create_security_group ? 1 : 0
+locals {
+  security_group_name = try(coalesce(var.security_group_name, var.name), "")
+}
 
-  name        = var.security_group_use_name_prefix ? null : var.security_group_name
-  name_prefix = var.security_group_use_name_prefix ? "${var.security_group_name}-" : null
+resource "aws_security_group" "this" {
+  count = var.create && var.create_security_group && length(var.mount_targets) > 0 ? 1 : 0
+
+  name        = var.security_group_use_name_prefix ? null : local.security_group_name
+  name_prefix = var.security_group_use_name_prefix ? "${local.security_group_name}-" : null
   description = var.security_group_description
 
   revoke_rules_on_delete = true
@@ -137,6 +145,7 @@ resource "aws_security_group_rule" "this" {
 
   security_group_id = aws_security_group.this[0].id
 
+  description              = try(each.value.description, null)
   type                     = try(each.value.type, "ingress")
   from_port                = try(each.value.from_port, 2049)
   to_port                  = try(each.value.to_port, 2049)
@@ -185,7 +194,11 @@ resource "aws_efs_access_point" "this" {
     }
   }
 
-  tags = merge(var.tags, try(each.value.tags, {}))
+  tags = merge(
+    var.tags,
+    try(each.value.tags, {}),
+    { Name = try(each.value.name, each.key) },
+  )
 }
 
 ################################################################################

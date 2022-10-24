@@ -4,6 +4,12 @@ variable "create" {
   default     = true
 }
 
+variable "name" {
+  description = "The name of the file system"
+  type        = string
+  default     = ""
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
@@ -38,8 +44,8 @@ variable "encrypted" {
   default     = true
 }
 
-variable "kms_key_id" {
-  description = "The ARN for the KMS encryption key. When specifying `kms_key_id`, encrypted needs to be set to `true`"
+variable "kms_key_arn" {
+  description = "The ARN for the KMS encryption key. When specifying `kms_key_arn`, encrypted needs to be set to `true`"
   type        = string
   default     = null
 }
@@ -91,9 +97,9 @@ variable "override_policy_documents" {
 }
 
 variable "policy_statements" {
-  description = "A map of IAM policy [statements](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document#statement) for custom permission usage"
+  description = "A list of IAM policy [statements](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document#statement) for custom permission usage"
   type        = any
-  default     = {}
+  default     = []
 }
 
 ################################################################################
