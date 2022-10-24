@@ -21,3 +21,26 @@ output "size_in_bytes" {
   description = "The latest known metered size (in bytes) of data stored in the file system, the value is not the exact size that the file system was at any point in time"
   value       = module.efs.size_in_bytes
 }
+
+################################################################################
+# Mount Target(s)
+################################################################################
+
+output "mount_targets" {
+  description = "Map of mount targets created and their attributes"
+  value       = module.efs.mount_targets
+}
+
+################################################################################
+# Security Group
+################################################################################
+
+output "security_group_arn" {
+  description = "ARN of the security group"
+  value       = module.efs.security_group_arn
+}
+
+output "security_group_id" {
+  description = "ID of the security group"
+  value       = module.efs.security_group_id
+}

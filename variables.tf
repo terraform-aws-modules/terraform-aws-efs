@@ -95,3 +95,53 @@ variable "policy_statements" {
   type        = any
   default     = {}
 }
+
+################################################################################
+# Mount Target(s)
+################################################################################
+
+variable "mount_targets" {
+  description = "A map of mount target definitions to create"
+  type        = any
+  default     = {}
+}
+
+################################################################################
+# Security Group
+################################################################################
+
+variable "create_security_group" {
+  description = "Determines whether a security group is created"
+  type        = bool
+  default     = true
+}
+
+variable "security_group_name" {
+  description = "Name to assign to the security group. If omitted, Terraform will assign a random, unique name"
+  type        = string
+  default     = null
+}
+
+variable "security_group_description" {
+  description = "Security group description. Defaults to Managed by Terraform"
+  type        = string
+  default     = null
+}
+
+variable "security_group_use_name_prefix" {
+  description = "Determines whether to use a name prefix for the security group. If `true`, the `security_group_name` value will be used as a prefix"
+  type        = bool
+  default     = false
+}
+
+variable "security_group_vpc_id" {
+  description = "The VPC ID where the security group will be created"
+  type        = string
+  default     = null
+}
+
+variable "security_group_rules" {
+  description = "Map of security group rule definitions to create"
+  type        = any
+  default     = {}
+}
