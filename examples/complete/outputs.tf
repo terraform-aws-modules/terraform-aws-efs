@@ -44,3 +44,12 @@ output "security_group_id" {
   description = "ID of the security group"
   value       = module.efs.security_group_id
 }
+
+################################################################################
+# Access Point(s)
+################################################################################
+
+output "access_points" {
+  description = "Map of access points created and their attributes"
+  value       = module.efs.access_points
+}

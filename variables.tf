@@ -145,3 +145,13 @@ variable "security_group_rules" {
   type        = any
   default     = {}
 }
+
+################################################################################
+# Access Point(s)
+################################################################################
+
+variable "access_points" {
+  description = "A map of access point definitions to create"
+  type        = any
+  default     = {}
+}

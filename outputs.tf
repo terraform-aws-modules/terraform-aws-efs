@@ -44,3 +44,12 @@ output "security_group_id" {
   description = "ID of the security group"
   value       = try(aws_security_group.this[0].id, null)
 }
+
+################################################################################
+# Access Point(s)
+################################################################################
+
+output "access_points" {
+  description = "Map of access points created and their attributes"
+  value       = aws_efs_access_point.this
+}

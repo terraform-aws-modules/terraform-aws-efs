@@ -147,3 +147,43 @@ resource "aws_security_group_rule" "this" {
   self                     = try(each.value.self, null)
   source_security_group_id = try(each.value.source_security_group_id, null)
 }
+
+################################################################################
+# Access Point(s)
+################################################################################
+
+resource "aws_efs_access_point" "this" {
+  for_each = { for k, v in var.access_points : k => v if var.create }
+
+  file_system_id = aws_efs_file_system.this[0].id
+
+  dynamic "posix_user" {
+    for_each = try([each.value.posix_user], [])
+
+    content {
+      gid            = posix_user.value.gid
+      uid            = posix_user.value.uid
+      secondary_gids = try(posix_user.value.secondary_gids, null)
+    }
+  }
+
+  dynamic "root_directory" {
+    for_each = try([each.value.root_directory], [])
+
+    content {
+      path = try(root_directory.value.path, null)
+
+      dynamic "creation_info" {
+        for_each = try([root_directory.value.creation_info], [])
+
+        content {
+          owner_gid   = creation_info.value.owner_gid
+          owner_uid   = creation_info.value.owner_uid
+          permissions = creation_info.value.permissions
+        }
+      }
+    }
+  }
+
+  tags = merge(var.tags, try(each.value.tags, {}))
+}
