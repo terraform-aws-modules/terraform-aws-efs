@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 locals {
-  region = "us-east-1"
+  region = "eu-west-1"
   name   = "efs-ex-${replace(basename(path.cwd), "_", "-")}"
 
   tags = {
@@ -14,21 +14,19 @@ locals {
 }
 
 ################################################################################
-# Efs Module
+# EFS Module
 ################################################################################
+
+module "efs" {
+  source = "../.."
+
+  tags = local.tags
+}
 
 module "efs_disabled" {
   source = "../.."
 
   create = false
-}
-
-module "efs" {
-  source = "../.."
-
-  create = false
-
-  tags = local.tags
 }
 
 ################################################################################
