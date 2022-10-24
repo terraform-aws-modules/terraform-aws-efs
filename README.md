@@ -2,6 +2,8 @@
 
 Terraform module which creates AWS EFS (elastic file system) resources.
 
+[![SWUbanner](https://raw.githubusercontent.com/vshymanskyy/StandWithUkraine/main/banner2-direct.svg)](https://github.com/vshymanskyy/StandWithUkraine/blob/main/docs/README.md)
+
 ## Usage
 
 See [`examples`](https://github.com/terraform-aws-modules/terraform-aws-efs/tree/master/examples) directory for working examples to reference:

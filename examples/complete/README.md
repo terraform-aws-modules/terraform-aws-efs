@@ -2,7 +2,9 @@
 
 Configuration in this directory creates:
 
-- <XXX>
+- A "complete" EFS file system which demonstrates the various configurations that are supported by the module
+- A "default" EFS file system which demonstrates the default configurations provided by the module
+- A disabled EFS file system
 
 ## Usage
 
