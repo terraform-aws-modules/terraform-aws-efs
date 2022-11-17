@@ -36,7 +36,8 @@ module "efs" {
   provisioned_throughput_in_mibps = 256
 
   lifecycle_policy = {
-    transition_to_ia = "AFTER_30_DAYS"
+    transition_to_ia                    = "AFTER_30_DAYS"
+    transition_to_primary_storage_class = "AFTER_1_ACCESS"
   }
 
   # File system policy

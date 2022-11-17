@@ -2,6 +2,10 @@
 # File System
 ################################################################################
 
+locals {
+  lifecycle_policy = [for k, v in var.lifecycle_policy : { (k) = v } if v != "" && v != null]
+}
+
 resource "aws_efs_file_system" "this" {
   count = var.create ? 1 : 0
 
@@ -14,7 +18,7 @@ resource "aws_efs_file_system" "this" {
   throughput_mode                 = var.throughput_mode
 
   dynamic "lifecycle_policy" {
-    for_each = length(var.lifecycle_policy) > 0 ? [var.lifecycle_policy] : []
+    for_each = local.lifecycle_policy
 
     content {
       transition_to_ia                    = try(lifecycle_policy.value.transition_to_ia, null)
