@@ -206,7 +206,7 @@ resource "aws_efs_access_point" "this" {
 ################################################################################
 
 resource "aws_efs_backup_policy" "this" {
-  count = var.create ? 1 : 0
+  count = var.create && var.create_backup_policy ? 1 : 0
 
   file_system_id = aws_efs_file_system.this[0].id
 
