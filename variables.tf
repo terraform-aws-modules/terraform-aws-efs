@@ -166,6 +166,12 @@ variable "access_points" {
 # Backup Policy
 ################################################################################
 
+variable "create_backup_policy" {
+  description = "Determines whether a backup policy is created"
+  type        = bool
+  default     = true
+}
+
 variable "enable_backup_policy" {
   description = "Determines whether a backup policy is `ENABLED` or `DISABLED`"
   type        = bool
