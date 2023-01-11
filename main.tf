@@ -68,7 +68,7 @@ data "aws_iam_policy_document" "policy" {
       }
 
       dynamic "condition" {
-        for_each = try(statement.value.conditions, [])
+        for_each = try(statement.value.condition, [])
 
         content {
           test     = condition.value.test
@@ -77,25 +77,7 @@ data "aws_iam_policy_document" "policy" {
         }
       }
     }
-  }
-
-  statement {
-    sid       = "NonSecureTransport"
-    effect    = "Deny"
-    actions   = ["*"]
-    resources = [aws_efs_file_system.this[0].arn]
-
-    principals {
-      type        = "AWS"
-      identifiers = ["*"]
-    }
-
-    condition {
-      test     = "Bool"
-      variable = "aws:SecureTransport"
-      values   = ["false"]
-    }
-  }
+  }  
 }
 
 resource "aws_efs_file_system_policy" "this" {
