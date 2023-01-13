@@ -79,7 +79,7 @@ data "aws_iam_policy_document" "policy" {
     }
   }
   dynamic "statement" {
-    for_each = try(var.secure_transport_policy_statement, true) ? [1] : []
+    for_each = var.deny_non_secure_transport ? [1] : []
 
     content {
       sid       = "NonSecureTransport"

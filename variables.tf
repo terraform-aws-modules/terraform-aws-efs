@@ -102,8 +102,8 @@ variable "policy_statements" {
   default     = []
 }
 
-variable "secure_transport_policy_statement" {
-  description = "SecureTransport statement to ensure encryption in communication with EFS"
+variable "deny_non_secure_transport " {
+  description = "Determines whether `aws:SecureTransport` is required when connecting to elastic file system"
   type        = bool
   default     = true
 }
