@@ -77,7 +77,28 @@ data "aws_iam_policy_document" "policy" {
         }
       }
     }
-  }  
+  }
+  dynamic "statement" {
+    for_each = try(var.secure_transport_policy_statement, true) ? [1] : []
+
+    content {
+      sid       = "NonSecureTransport"
+      effect    = "Deny"
+      actions   = ["*"]
+      resources = [aws_efs_file_system.this[0].arn]
+
+      principals {
+        type        = "AWS"
+        identifiers = ["*"]
+      }
+
+      condition {
+        test     = "Bool"
+        variable = "aws:SecureTransport"
+        values   = ["false"]
+      }
+    }
+  }
 }
 
 resource "aws_efs_file_system_policy" "this" {

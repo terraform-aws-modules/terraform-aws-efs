@@ -102,6 +102,12 @@ variable "policy_statements" {
   default     = []
 }
 
+variable "secure_transport_policy_statement" {
+  description = "SecureTransport statement to ensure encryption in communication with EFS"
+  type        = bool
+  default     = true
+}
+
 ################################################################################
 # Mount Target(s)
 ################################################################################
