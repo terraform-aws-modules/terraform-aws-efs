@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.1.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.0.2...v1.1.0) (2023-01-16)
+
+
+### Features
+
+* Allow users to opt out of `NonSecureTransport` policy requirement ([#7](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/7)) ([3f851b1](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/3f851b1ac1efe4a473b697bd287f178e09f838e0))
+
+
+### Bug Fixes
+
+* Use a version for  to avoid GitHub API rate limiting on CI workflows ([#6](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/6)) ([269fa7c](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/269fa7c55976e32b7b0c949deef4d729aa0b0cf2))
+
 ### [1.0.2](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.0.1...v1.0.2) (2022-12-09)
 
 
