@@ -57,9 +57,7 @@ module "efs" {
   ]
 
   # Mount targets / security group
-  mount_targets = { for k, v in toset(range(length(local.azs))) :
-    element(local.azs, k) => { subnet_id = element(module.vpc.private_subnets, k) }
-  }
+  mount_targets              = { for k, v in zipmap(local.azs, module.vpc.private_subnets) : k => { subnet_id = v } }
   security_group_description = "Example EFS security group"
   security_group_vpc_id      = module.vpc.vpc_id
   security_group_rules = {
