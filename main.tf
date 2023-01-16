@@ -68,7 +68,7 @@ data "aws_iam_policy_document" "policy" {
       }
 
       dynamic "condition" {
-        for_each = try(statement.value.condition, [])
+        for_each = try(statement.value.conditions, statement.value.condition, [])
 
         content {
           test     = condition.value.test
@@ -78,8 +78,9 @@ data "aws_iam_policy_document" "policy" {
       }
     }
   }
+
   dynamic "statement" {
-    for_each = var.deny_non_secure_transport ? [1] : []
+    for_each = var.deny_nonsecure_transport ? [1] : []
 
     content {
       sid       = "NonSecureTransport"
