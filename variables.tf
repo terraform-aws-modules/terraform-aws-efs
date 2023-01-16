@@ -102,6 +102,12 @@ variable "policy_statements" {
   default     = []
 }
 
+variable "deny_nonsecure_transport" {
+  description = "Determines whether `aws:SecureTransport` is required when connecting to elastic file system"
+  type        = bool
+  default     = true
+}
+
 ################################################################################
 # Mount Target(s)
 ################################################################################
