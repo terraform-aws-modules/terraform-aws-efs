@@ -14,7 +14,7 @@ resource "aws_efs_file_system" "this" {
   throughput_mode                 = var.throughput_mode
 
   dynamic "lifecycle_policy" {
-    for_each = length(var.lifecycle_policy) > 0 ? [var.lifecycle_policy] : []
+    for_each = [for k, v in var.lifecycle_policy : { (k) = v }]
 
     content {
       transition_to_ia                    = try(lifecycle_policy.value.transition_to_ia, null)
