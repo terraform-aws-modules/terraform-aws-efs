@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.1.1](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.1.0...v1.1.1) (2023-01-17)
+
+
+### Bug Fixes
+
+* Allow passing up to the maximum of 2 lifecycle policy statements ([#3](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/3)) ([19f8e7c](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/19f8e7cd5c8c650fbc5a06c00f7e116d95fcdb20))
+
 ## [1.1.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.0.2...v1.1.0) (2023-01-16)
 
 
