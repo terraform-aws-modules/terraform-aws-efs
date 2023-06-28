@@ -40,7 +40,7 @@ Note that this example may create resources which will incur monetary charges on
 | <a name="module_efs_default"></a> [efs\_default](#module\_efs\_default) | ../.. | n/a |
 | <a name="module_efs_disabled"></a> [efs\_disabled](#module\_efs\_disabled) | ../.. | n/a |
 | <a name="module_kms"></a> [kms](#module\_kms) | terraform-aws-modules/kms/aws | ~> 1.0 |
-| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 4.0 |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | terraform-aws-modules/vpc/aws | ~> 5.0 |
 
 ## Resources
 
