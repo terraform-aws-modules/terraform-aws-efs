@@ -57,7 +57,7 @@ variable "provisioned_throughput_in_mibps" {
 }
 
 variable "throughput_mode" {
-  description = "Throughput mode for the file system. Defaults to `bursting`. Valid values: `bursting`, `provisioned`. When using `provisioned`, also set `provisioned_throughput_in_mibps`"
+  description = "Throughput mode for the file system. Defaults to `bursting`. Valid values: `bursting`, `elastic`, and `provisioned`. When using `provisioned`, also set `provisioned_throughput_in_mibps`"
   type        = string
   default     = null
 }
