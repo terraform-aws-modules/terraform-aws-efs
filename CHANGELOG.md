@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.2.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.1.1...v1.2.0) (2023-06-28)
+
+
+### Features
+
+* Added support for elastic throughput mode ([#13](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/13)) ([e247e72](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/e247e72ebaa816cbd46cc508ed2aaab94e03ff74))
+
 ### [1.1.1](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.1.0...v1.1.1) (2023-01-17)
 
 
