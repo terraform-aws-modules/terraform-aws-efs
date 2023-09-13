@@ -142,6 +142,10 @@ resource "aws_security_group" "this" {
   vpc_id                 = var.security_group_vpc_id
 
   tags = var.tags
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "aws_security_group_rule" "this" {
@@ -159,6 +163,10 @@ resource "aws_security_group_rule" "this" {
   prefix_list_ids          = try(each.value.prefix_list_ids, null)
   self                     = try(each.value.self, null)
   source_security_group_id = try(each.value.source_security_group_id, null)
+
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 ################################################################################
