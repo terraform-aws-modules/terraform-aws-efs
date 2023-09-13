@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.3.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.2.0...v1.3.0) (2023-09-13)
+
+
+### Features
+
+* Add lifecycle create_before_destroy to avoid timeout with security group ([#16](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/16)) ([cab07ba](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/cab07ba2448691c94eb192fbe5a588bcc59dfbdd))
+
 ## [1.2.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.1.1...v1.2.0) (2023-06-28)
 
 
