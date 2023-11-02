@@ -158,11 +158,11 @@ resource "aws_security_group_rule" "this" {
   from_port                = try(each.value.from_port, 2049)
   to_port                  = try(each.value.to_port, 2049)
   protocol                 = try(each.value.protocol, "tcp")
-  cidr_blocks              = try(each.value.cidr_blocks, null)
-  ipv6_cidr_blocks         = try(each.value.ipv6_cidr_blocks, null)
-  prefix_list_ids          = try(each.value.prefix_list_ids, null)
+  cidr_blocks              = lookup(each.value, "cidr_blocks", null)
+  ipv6_cidr_blocks         = lookup(each.value, "ipv6_cidr_blocks", null)
+  prefix_list_ids          = lookup(each.value, "prefix_list_ids", null)
   self                     = try(each.value.self, null)
-  source_security_group_id = try(each.value.source_security_group_id, null)
+  source_security_group_id = lookup(each.value, "source_security_group_id", null)
 
   lifecycle {
     create_before_destroy = true
