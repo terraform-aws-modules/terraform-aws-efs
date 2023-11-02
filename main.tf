@@ -129,10 +129,12 @@ resource "aws_efs_mount_target" "this" {
 
 locals {
   security_group_name = try(coalesce(var.security_group_name, var.name), "")
+
+  create_security_group = var.create && var.create_security_group && length(var.mount_targets) > 0
 }
 
 resource "aws_security_group" "this" {
-  count = var.create && var.create_security_group && length(var.mount_targets) > 0 ? 1 : 0
+  count = local.create_security_group ? 1 : 0
 
   name        = var.security_group_use_name_prefix ? null : local.security_group_name
   name_prefix = var.security_group_use_name_prefix ? "${local.security_group_name}-" : null
@@ -149,7 +151,7 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_security_group_rule" "this" {
-  for_each = { for k, v in var.security_group_rules : k => v if var.create && var.create_security_group }
+  for_each = { for k, v in var.security_group_rules : k => v if local.create_security_group }
 
   security_group_id = aws_security_group.this[0].id
 
