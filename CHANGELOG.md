@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+### [1.3.1](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.3.0...v1.3.1) (2023-11-03)
+
+
+### Bug Fixes
+
+* Use `lookup()` on computed resource attribute lookups in `for_each` loop ([#18](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/18)) ([a206e43](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/a206e4397871609dbf80866eb9cddd4b597075c8))
+
 ## [1.3.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.2.0...v1.3.0) (2023-09-13)
 
 
