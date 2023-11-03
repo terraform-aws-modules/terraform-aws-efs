@@ -4,7 +4,7 @@ provider "aws" {
 
 locals {
   region = "eu-west-1"
-  name   = "efs-ex-${replace(basename(path.cwd), "_", "-")}"
+  name   = "ex-${basename(path.cwd)}"
 
   azs = slice(data.aws_availability_zones.available.names, 0, 3)
 
@@ -135,9 +135,8 @@ module "vpc" {
   public_subnets  = ["10.99.0.0/24", "10.99.1.0/24", "10.99.2.0/24"]
   private_subnets = ["10.99.3.0/24", "10.99.4.0/24", "10.99.5.0/24"]
 
-  enable_nat_gateway      = false
-  single_nat_gateway      = true
-  map_public_ip_on_launch = false
+  enable_nat_gateway = false
+  single_nat_gateway = true
 
   tags = local.tags
 }
