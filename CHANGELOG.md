@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.4.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.3.1...v1.4.0) (2024-01-12)
+
+
+### Features
+
+* Added AccessedViaMountTarget condition for deny_nonsecure_transport ([#21](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/21)) ([543f54c](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/543f54cdf203108106d006ea693463ea463df293))
+
 ### [1.3.1](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.3.0...v1.3.1) (2023-11-03)
 
 
