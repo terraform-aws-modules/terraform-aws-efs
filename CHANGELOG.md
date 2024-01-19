@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.5.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.4.0...v1.5.0) (2024-01-19)
+
+
+### Features
+
+* Wrapper for terragrunt ([#23](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/23)) ([5c7ce58](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/5c7ce5828693a1184d6fdad1a0378c4339fcad10))
+
 ## [1.4.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.3.1...v1.4.0) (2024-01-12)
 
 
