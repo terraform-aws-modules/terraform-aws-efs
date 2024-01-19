@@ -115,8 +115,7 @@ module "efs_archive" {
   encrypted      = true
   kms_key_arn    = module.kms.key_arn
 
-  performance_mode = "maxIO"
-  throughput_mode  = "elastic"
+  throughput_mode = "elastic"
 
   lifecycle_policy = {
     transition_to_archive               = "AFTER_60_DAYS"
