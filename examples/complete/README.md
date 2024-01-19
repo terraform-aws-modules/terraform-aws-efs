@@ -37,6 +37,7 @@ Note that this example may create resources which will incur monetary charges on
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_efs"></a> [efs](#module\_efs) | ../.. | n/a |
+| <a name="module_efs_archive"></a> [efs\_archive](#module\_efs\_archive) | ../.. | n/a |
 | <a name="module_efs_default"></a> [efs\_default](#module\_efs\_default) | ../.. | n/a |
 | <a name="module_efs_disabled"></a> [efs\_disabled](#module\_efs\_disabled) | ../.. | n/a |
 | <a name="module_kms"></a> [kms](#module\_kms) | terraform-aws-modules/kms/aws | ~> 1.0 |
