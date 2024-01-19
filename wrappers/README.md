@@ -64,125 +64,36 @@ module "wrapper" {
 }
 ```
 
-## Example: Manage multiple EFS resources in one Terragrunt layer
+## Example: Manage multiple S3 buckets in one Terragrunt layer
 
-`eu-west-1/efs/terragrunt.hcl`:
+`eu-west-1/s3-buckets/terragrunt.hcl`:
 
 ```hcl
 terraform {
-  source = "tfr:///terraform-aws-modules/efs/aws//wrappers"
+  source = "tfr:///terraform-aws-modules/s3-bucket/aws//wrappers"
   # Alternative source:
-  # source = "git::git@github.com:terraform-aws-modules/terraform-aws-efs.git//wrappers?ref=master"
+  # source = "git::git@github.com:terraform-aws-modules/terraform-aws-s3-bucket.git//wrappers?ref=master"
 }
 
 inputs = {
   defaults = {
-    create = true
+    force_destroy = true
 
-    attach_policy                      = true
-    bypass_policy_lockout_safety_check = false
-    
-    performance_mode                = "maxIO"
-    throughput_mode                 = "provisioned"
-    provisioned_throughput_in_mibps = 256
-
-    encrypted      = true
-
-    lifecycle_policy = {
-      transition_to_ia = "AFTER_30_DAYS"
-    }
-    
-    attach_policy                      = true
-    bypass_policy_lockout_safety_check = false
-
-    tags = {
-      Terraform   = "true"
-      Environment = "dev"
-    }
+    attach_elb_log_delivery_policy        = true
+    attach_lb_log_delivery_policy         = true
+    attach_deny_insecure_transport_policy = true
+    attach_require_latest_tls_policy      = true
   }
 
   items = {
-    efs1 = {
-      name           = "example1"
-      creation_token = "example-token1"
-      kms_key_arn    = "arn:aws:kms:eu-west-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ab"
-      policy_statements = [
-        {
-          sid     = "Example1"
-          actions = ["elasticfilesystem:ClientMount"]
-          principals = [
-            {
-              type        = "AWS"
-              identifiers = ["arn:aws:iam::111122223333:role/EfsReadOnly"]
-            }
-          ]
-        }
-      ]
-      mount_targets = {
-        "eu-west-1a" = {
-          subnet_id = "subnet-abcde012"
-        }
-        "eu-west-1b" = {
-          subnet_id = "subnet-bcde012a"
-        }
-        "eu-west-1c" = {
-          subnet_id = "subnet-fghi345a"
-        }
-      }
-      security_group_description = "Example EFS security group"
-      security_group_vpc_id      = "vpc-1234556abcdef"
-      security_group_rules = {
-        vpc = {
-          # relying on the defaults provdied for EFS/NFS (2049/TCP + ingress)
-          description = "NFS ingress from VPC private subnets"
-          cidr_blocks = ["10.99.3.0/24", "10.99.4.0/24", "10.99.5.0/24"]
-        }
-      }
-      access_points = {
-        posix_example = {
-          name = "posix-example"
-          posix_user = {
-            gid            = 1001
-            uid            = 1001
-            secondary_gids = [1002]
-          }
-          tags = {
-            Additionl = "yes"
-          }
-        }
-        root_example = {
-          root_directory = {
-            path = "/example"
-            creation_info = {
-              owner_gid   = 1001
-              owner_uid   = 1001
-              permissions = "755"
-            }
-          }
-        }
-      }
-      enable_backup_policy = true
-      create_replication_configuration = true
-      replication_configuration_destination = {
-        region = "eu-west-2"
-      }
+    bucket1 = {
+      bucket = "my-random-bucket-1"
     }
-    efs2 = {
-      name           = "example2"
-      creation_token = "example-token2"
-      kms_key_arn    = "arn:aws:kms:eu-west-1:111122223333:key/1234abcd-12ab-34cd-56ef-1234567890ac"
-      policy_statements = [
-        {
-          sid     = "Example2"
-          actions = ["elasticfilesystem:ClientMount"]
-          principals = [
-            {
-              type        = "AWS"
-              identifiers = ["arn:aws:iam::111122223333:role/EfsWrite"]
-            }
-          ]
-        }
-      ]
+    bucket2 = {
+      bucket = "my-random-bucket-2"
+      tags = {
+        Secure = "probably"
+      }
     }
   }
 }
