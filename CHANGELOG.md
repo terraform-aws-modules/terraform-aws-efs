@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.5.0...v1.6.0) (2024-01-21)
+
+
+### Features
+
+* Added support in lifecycle_policy with transition_to_archive ([#24](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/24)) ([c6d4be0](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/c6d4be01017517e6d829a3a0cac61a7825b15f72))
+
 ## [1.5.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.4.0...v1.5.0) (2024-01-19)
 
 
