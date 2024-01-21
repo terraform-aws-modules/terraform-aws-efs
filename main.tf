@@ -18,6 +18,7 @@ resource "aws_efs_file_system" "this" {
 
     content {
       transition_to_ia                    = try(lifecycle_policy.value.transition_to_ia, null)
+      transition_to_archive               = try(lifecycle_policy.value.transition_to_archive, null)
       transition_to_primary_storage_class = try(lifecycle_policy.value.transition_to_primary_storage_class, null)
     }
   }
