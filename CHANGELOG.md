@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.1](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.6.0...v1.6.1) (2024-03-07)
+
+
+### Bug Fixes
+
+* Update CI workflow versions to remove deprecated runtime warnings ([#26](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/26)) ([ada1090](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/ada10907401a9805d6b3358af2b32e6bbf28e3dd))
+
 ## [1.6.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.5.0...v1.6.0) (2024-01-21)
 
 
