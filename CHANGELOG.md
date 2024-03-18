@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.2](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.6.1...v1.6.2) (2024-03-18)
+
+
+### Bug Fixes
+
+* Add comment warning about expensive provisioned throughput mode ([#29](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/29)) ([f86d365](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/f86d365fec79acfa0bdf63cc75912645cc472a71))
+
 ## [1.6.1](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.6.0...v1.6.1) (2024-03-07)
 
 
