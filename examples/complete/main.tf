@@ -31,10 +31,10 @@ module "efs" {
   encrypted      = true
   kms_key_arn    = module.kms.key_arn
 
-  performance_mode = "maxIO"
+  # performance_mode = "maxIO"
   # NB! PROVISIONED TROUGHPUT MODE WITH 256 MIBPS IS EXPENSIVE ~$1500/month
-  throughput_mode                 = "provisioned"
-  provisioned_throughput_in_mibps = 256
+  # throughput_mode                 = "provisioned"
+  # provisioned_throughput_in_mibps = 256
 
   lifecycle_policy = {
     transition_to_ia                    = "AFTER_30_DAYS"
