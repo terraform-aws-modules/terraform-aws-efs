@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.3](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.6.2...v1.6.3) (2024-05-12)
+
+
+### Bug Fixes
+
+* Bump provider version to include bugfix for `lifecycle_policy` block ([#32](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/32)) ([c1186b9](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/c1186b970ee59ca46f6ce4b795c5f3bd9dc06ee0))
+
 ## [1.6.2](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.6.1...v1.6.2) (2024-03-18)
 
 
