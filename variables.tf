@@ -108,7 +108,7 @@ variable "deny_nonsecure_transport" {
   default     = true
 }
 
-variable "use_default_deny_nonsecure_transport_policy" {
+variable "deny_nonsecure_transport_via_mount_target" {
   description = "Determines whether to use the common policy option for denying nonsecure transport which allows all AWS principals when accessed via EFS mounted target"
   type        = bool
   default     = true

@@ -42,9 +42,9 @@ module "efs" {
   }
 
   # File system policy
-  attach_policy                               = true
-  use_default_deny_nonsecure_transport_policy = false
-  bypass_policy_lockout_safety_check          = false
+  attach_policy                             = true
+  deny_nonsecure_transport_via_mount_target = false
+  bypass_policy_lockout_safety_check        = false
   policy_statements = [
     {
       sid     = "Example"
