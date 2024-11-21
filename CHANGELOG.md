@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.6.5](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.6.4...v1.6.5) (2024-11-21)
+
+
+### Bug Fixes
+
+* Conditionally create default `NonSecureTransportAccessedViaMountTarget` policy statement ([#35](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/35)) ([7c58eb1](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/7c58eb105f21a3fcdaa081c097528eeba6a8d750))
+
 ## [1.6.4](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.6.3...v1.6.4) (2024-10-11)
 
 
