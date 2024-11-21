@@ -103,7 +103,7 @@ data "aws_iam_policy_document" "policy" {
   }
 
   dynamic "statement" {
-    for_each = var.deny_nonsecure_transport ? [1] : []
+    for_each = var.deny_nonsecure_transport_via_mount_target ? [1] : []
 
     content {
       sid    = "NonSecureTransportAccessedViaMountTarget"
