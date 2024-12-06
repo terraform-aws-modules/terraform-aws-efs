@@ -124,6 +124,12 @@ variable "mount_targets" {
   default     = {}
 }
 
+variable "security_groups" {
+  description = "(Optional) A list of up to 5 VPC security group IDs (that must be for the same VPC as subnet specified) in effect for the mount target."
+  type        = list(string)
+  default     = null
+}
+
 ################################################################################
 # Security Group
 ################################################################################

@@ -146,7 +146,7 @@ resource "aws_efs_mount_target" "this" {
 
   file_system_id  = aws_efs_file_system.this[0].id
   ip_address      = try(each.value.ip_address, null)
-  security_groups = var.create_security_group ? concat([aws_security_group.this[0].id], try(each.value.security_groups, [])) : try(each.value.security_groups, null)
+  security_groups = var.create_security_group ? concat([aws_security_group.this[0].id], try(each.value.security_groups, [])) : try(each.value.security_groups, var.security_groups)
   subnet_id       = each.value.subnet_id
 }
 
