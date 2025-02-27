@@ -158,6 +158,73 @@ locals {
   security_group_name = try(coalesce(var.security_group_name, var.name), "")
 
   create_security_group = var.create && var.create_security_group && length(var.mount_targets) > 0
+  egress_rules_ipv4 = flatten([
+    for rule in var.security_group_rules : [
+      for cidr_block in try(rule.cidr_blocks, []) : {
+        description                  = try(rule.description, null)
+        from_port                    = try(rule.from_port, 2049)
+        to_port                      = try(rule.to_port, 2049)
+        ip_protocol                  = try(rule.protocol, "tcp")
+        prefix_list_id               = lookup(rule, "prefix_list_ids", null)
+        referenced_security_group_id = lookup(rule, "source_security_group_id", null)
+        from_port                    = try(rule.from_port, 2049)
+        to_port                      = try(rule.to_port, 2049)
+        protocol                     = try(rule.protocol, "tcp")
+        cidr_ipv4                    = cidr_block
+      }
+    ] if try(rule.type, "egress") == "egress" && try(rule.ipv6_cidr_blocks, null) == null
+  ])
+  egress_rules_ipv6 = flatten([
+    for rule in var.security_group_rules : [
+      for cidr_block in try(rule.ipv6_cidr_blocks, []) : {
+        description                  = try(rule.description, null)
+        from_port                    = try(rule.from_port, 2049)
+        to_port                      = try(rule.to_port, 2049)
+        ip_protocol                  = try(rule.protocol, "tcp")
+        prefix_list_id               = lookup(rule, "prefix_list_ids", null)
+        referenced_security_group_id = lookup(rule, "source_security_group_id", null)
+        from_port                    = try(rule.from_port, 2049)
+        to_port                      = try(rule.to_port, 2049)
+        protocol                     = try(rule.protocol, "tcp")
+        cidr_ipv6                    = cidr_block
+      }
+    ] if try(rule.type, "egress") == "egress" && try(rule.cidr_block, null) == null
+  ])
+  egress_rules = concat(local.egress_rules_ipv4, local.egress_rules_ipv6)
+
+  ingress_rules_ipv4 = flatten([
+    for rule in var.security_group_rules : [
+      for cidr_block in try(rule.cidr_blocks, []) : {
+        description                  = try(rule.description, null)
+        from_port                    = try(rule.from_port, 2049)
+        to_port                      = try(rule.to_port, 2049)
+        ip_protocol                  = try(rule.protocol, "tcp")
+        prefix_list_id               = lookup(rule, "prefix_list_ids", null)
+        referenced_security_group_id = lookup(rule, "source_security_group_id", null)
+        from_port                    = try(rule.from_port, 2049)
+        to_port                      = try(rule.to_port, 2049)
+        protocol                     = try(rule.protocol, "tcp")
+        cidr_ipv4                    = cidr_block
+      }
+    ] if try(rule.type, "ingress") == "ingress" && try(rule.ipv6_cidr_blocks, null) == null
+  ])
+  ingress_rules_ipv6 = flatten([
+    for rule in var.security_group_rules : [
+      for cidr_block in try(rule.ipv6_cidr_blocks, []) : {
+        description                  = try(rule.description, null)
+        from_port                    = try(rule.from_port, 2049)
+        to_port                      = try(rule.to_port, 2049)
+        ip_protocol                  = try(rule.protocol, "tcp")
+        prefix_list_id               = lookup(rule, "prefix_list_ids", null)
+        referenced_security_group_id = lookup(rule, "source_security_group_id", null)
+        from_port                    = try(rule.from_port, 2049)
+        to_port                      = try(rule.to_port, 2049)
+        protocol                     = try(rule.protocol, "tcp")
+        cidr_ipv6                    = cidr_block
+      }
+    ] if try(rule.type, "ingress") == "ingress" && try(rule.cidr_block, null) == null
+  ])
+  ingress_rules = concat(local.ingress_rules_ipv4, local.ingress_rules_ipv6)
 }
 
 resource "aws_security_group" "this" {
@@ -178,18 +245,18 @@ resource "aws_security_group" "this" {
 }
 
 resource "aws_vpc_security_group_egress_rule" "this" {
-  for_each = { for k, v in var.security_group_rules : k => v if local.create_security_group && try(v.type, "ingress") == "egress" }
+  for_each = { for idx, rule in local.egress_rules : idx => rule }
 
   security_group_id = aws_security_group.this[0].id
 
-  description                  = try(each.value.description, null)
-  from_port                    = try(each.value.from_port, 2049)
-  to_port                      = try(each.value.to_port, 2049)
-  ip_protocol                  = try(each.value.protocol, "tcp")
-  cidr_ipv4                    = lookup(each.value, "cidr_blocks", null)
-  cidr_ipv6                    = lookup(each.value, "ipv6_cidr_blocks", null)
-  prefix_list_id               = lookup(each.value, "prefix_list_ids", null)
-  referenced_security_group_id = lookup(each.value, "source_security_group_id", null)
+  description = try(each.value.description, null)
+  from_port   = try(each.value.from_port, 2049)
+  to_port     = try(each.value.to_port, 2049)
+  ip_protocol = try(each.value.ip_protocol, "tcp")
+  cidr_ipv4   = try(each.value.cidr_ipv4, null) != null ? each.value.cidr_ipv4 : null
+  cidr_ipv6   = try(each.value.cidr_ipv6, null) != null ? each.value.cidr_ipv6 : null
+  # prefix_list_id               = each.value.prefix_list_id
+  referenced_security_group_id = aws_security_group.this[0].id
 
   lifecycle {
     create_before_destroy = true
@@ -197,39 +264,18 @@ resource "aws_vpc_security_group_egress_rule" "this" {
 }
 
 resource "aws_vpc_security_group_ingress_rule" "this" {
-  for_each = { for k, v in var.security_group_rules : k => v if local.create_security_group && try(v.type, "ingress") == "ingress" }
+  for_each = { for idx, rule in local.ingress_rules : idx => rule }
 
   security_group_id = aws_security_group.this[0].id
 
-  description                  = try(each.value.description, null)
-  from_port                    = try(each.value.from_port, 2049)
-  to_port                      = try(each.value.to_port, 2049)
-  ip_protocol                  = try(each.value.protocol, "tcp")
-  cidr_ipv4                    = lookup(each.value, "cidr_blocks", null)
-  cidr_ipv6                    = lookup(each.value, "ipv6_cidr_blocks", null)
-  prefix_list_id               = lookup(each.value, "prefix_list_ids", null)
-  referenced_security_group_id = lookup(each.value, "source_security_group_id", null)
-
-  lifecycle {
-    create_before_destroy = true
-  }
-}
-
-resource "aws_security_group_rule" "this" {
-  for_each = { for k, v in var.security_group_rules : k => v if local.create_security_group }
-
-  security_group_id = aws_security_group.this[0].id
-
-  description              = try(each.value.description, null)
-  type                     = try(each.value.type, "ingress")
-  from_port                = try(each.value.from_port, 2049)
-  to_port                  = try(each.value.to_port, 2049)
-  protocol                 = try(each.value.protocol, "tcp")
-  cidr_blocks              = lookup(each.value, "cidr_blocks", null)
-  ipv6_cidr_blocks         = lookup(each.value, "ipv6_cidr_blocks", null)
-  prefix_list_ids          = lookup(each.value, "prefix_list_ids", null)
-  self                     = try(each.value.self, null)
-  source_security_group_id = lookup(each.value, "source_security_group_id", null)
+  description = try(each.value.description, null)
+  from_port   = try(each.value.from_port, 2049)
+  to_port     = try(each.value.to_port, 2049)
+  ip_protocol = try(each.value.ip_protocol, "tcp")
+  cidr_ipv4   = try(each.value.cidr_ipv4, null) != null ? each.value.cidr_ipv4 : null
+  cidr_ipv6   = try(each.value.cidr_ipv6, null) != null ? each.value.cidr_ipv6 : null
+  # prefix_list_id               = each.value.prefix_list_id
+  referenced_security_group_id = aws_security_group.this[0].id
 
   lifecycle {
     create_before_destroy = true
