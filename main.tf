@@ -23,6 +23,13 @@ resource "aws_efs_file_system" "this" {
     }
   }
 
+  dynamic "protection" {
+    for_each = length(var.protection) > 0 ? [var.protection] : []
+    content {
+      replication_overwrite = try(protection.value.replication_overwrite, null)
+    }
+  }
+
   tags = merge(
     var.tags,
     { Name = var.name },
@@ -270,6 +277,7 @@ resource "aws_efs_replication_configuration" "this" {
 
     content {
       availability_zone_name = try(destination.value.availability_zone_name, null)
+      file_system_id         = try(destination.value.file_system_id, null)
       kms_key_id             = try(destination.value.kms_key_id, null)
       region                 = try(destination.value.region, null)
     }

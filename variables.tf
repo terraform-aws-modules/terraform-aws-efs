@@ -68,6 +68,12 @@ variable "lifecycle_policy" {
   default     = {}
 }
 
+variable "protection" {
+  description = "A map of file protection configurations"
+  type        = any
+  default     = {}
+}
+
 ################################################################################
 # File System Policy
 ################################################################################
