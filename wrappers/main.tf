@@ -23,6 +23,7 @@ module "wrapper" {
   override_policy_documents                 = try(each.value.override_policy_documents, var.defaults.override_policy_documents, [])
   performance_mode                          = try(each.value.performance_mode, var.defaults.performance_mode, null)
   policy_statements                         = try(each.value.policy_statements, var.defaults.policy_statements, [])
+  protection                                = try(each.value.protection, var.defaults.protection, {})
   provisioned_throughput_in_mibps           = try(each.value.provisioned_throughput_in_mibps, var.defaults.provisioned_throughput_in_mibps, null)
   replication_configuration_destination     = try(each.value.replication_configuration_destination, var.defaults.replication_configuration_destination, {})
   security_group_description                = try(each.value.security_group_description, var.defaults.security_group_description, null)
