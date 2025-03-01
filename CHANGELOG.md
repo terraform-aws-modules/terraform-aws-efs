@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.7.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.6.5...v1.7.0) (2025-03-01)
+
+
+### Features
+
+* Support `aws_efs_file_system.protection` and `aws_efs_replication_configuration.destination.file_system_id` ([#43](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/43)) ([1dae082](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/1dae0823fa092cf7037e8008d005d67716790ccd))
+
 ## [1.6.5](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.6.4...v1.6.5) (2024-11-21)
 
 
