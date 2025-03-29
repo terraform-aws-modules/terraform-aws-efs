@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## [1.8.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.7.0...v1.8.0) (2025-03-29)
+
+
+### Features
+
+* Add `Name` tag to security group created ([#44](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/44)) ([34969f9](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/34969f9d0692ba995aaf1448c941a849ef203007))
+
 ## [1.7.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.6.5...v1.7.0) (2025-03-01)
 
 
