@@ -177,7 +177,10 @@ resource "aws_security_group" "this" {
   revoke_rules_on_delete = true
   vpc_id                 = var.security_group_vpc_id
 
-  tags = var.tags
+  tags = merge(
+    var.tags,
+    { Name = local.security_group_name },
+  )
 
   lifecycle {
     create_before_destroy = true
