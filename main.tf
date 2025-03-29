@@ -179,7 +179,7 @@ resource "aws_security_group" "this" {
 
   tags = merge(
     var.tags,
-    local.security_group_name != "" ? { Name = local.security_group_name } : {},
+    { Name = local.security_group_name },
   )
 
   lifecycle {
