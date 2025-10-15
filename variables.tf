@@ -10,6 +10,12 @@ variable "name" {
   default     = ""
 }
 
+variable "region" {
+  description = "Region where this resource will be managed. Defaults to the Region set in the provider configuration"
+  type        = string
+  default     = null
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)
@@ -64,14 +70,20 @@ variable "throughput_mode" {
 
 variable "lifecycle_policy" {
   description = "A file system [lifecycle policy](https://docs.aws.amazon.com/efs/latest/ug/API_LifecyclePolicy.html) object"
-  type        = any
-  default     = {}
+  type = object({
+    transition_to_ia                    = optional(string)
+    transition_to_archive               = optional(string)
+    transition_to_primary_storage_class = optional(string)
+  })
+  default = {}
 }
 
 variable "protection" {
   description = "A map of file protection configurations"
-  type        = any
-  default     = {}
+  type = object({
+    replication_overwrite = optional(string)
+  })
+  default = null
 }
 
 ################################################################################
@@ -104,8 +116,33 @@ variable "override_policy_documents" {
 
 variable "policy_statements" {
   description = "A list of IAM policy [statements](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document#statement) for custom permission usage"
-  type        = any
-  default     = []
+  type = list(object({
+    sid           = optional(string)
+    actions       = optional(list(string))
+    not_actions   = optional(list(string))
+    effect        = optional(string)
+    resources     = optional(list(string))
+    not_resources = optional(list(string))
+    principals = optional(list(object({
+      type        = string
+      identifiers = list(string)
+    })))
+    not_principals = optional(list(object({
+      type        = string
+      identifiers = list(string)
+    })))
+    conditions = optional(list(object({
+      test     = string
+      values   = list(string)
+      variable = string
+    })))
+    condition = optional(list(object({
+      test     = string
+      values   = list(string)
+      variable = string
+    })))
+  }))
+  default = null
 }
 
 variable "deny_nonsecure_transport" {
@@ -126,8 +163,15 @@ variable "deny_nonsecure_transport_via_mount_target" {
 
 variable "mount_targets" {
   description = "A map of mount target definitions to create"
-  type        = any
-  default     = {}
+  type = map(object({
+    ip_address      = optional(string)
+    ip_address_type = optional(string)
+    ipv6_address    = optional(string)
+    region          = optional(string)
+    security_groups = optional(list(string), [])
+    subnet_id       = string
+  }))
+  default = {}
 }
 
 ################################################################################
@@ -164,10 +208,44 @@ variable "security_group_vpc_id" {
   default     = null
 }
 
-variable "security_group_rules" {
-  description = "Map of security group rule definitions to create"
-  type        = any
-  default     = {}
+variable "security_group_ingress_rules" {
+  description = "Map of security group ingress rules to add to the security group created"
+  type = map(object({
+    name = optional(string)
+
+    cidr_ipv4                    = optional(string)
+    cidr_ipv6                    = optional(string)
+    description                  = optional(string)
+    from_port                    = optional(number, 2049)
+    ip_protocol                  = optional(string, "tcp")
+    prefix_list_id               = optional(string)
+    referenced_security_group_id = optional(string)
+    region                       = optional(string)
+    tags                         = optional(map(string), {})
+    to_port                      = optional(number, 2049)
+  }))
+  default  = {}
+  nullable = false
+}
+
+variable "security_group_egress_rules" {
+  description = "Map of security group egress rules to add to the security group created"
+  type = map(object({
+    name = optional(string)
+
+    cidr_ipv4                    = optional(string)
+    cidr_ipv6                    = optional(string)
+    description                  = optional(string)
+    from_port                    = optional(number, 2049)
+    ip_protocol                  = optional(string, "tcp")
+    prefix_list_id               = optional(string)
+    referenced_security_group_id = optional(string)
+    region                       = optional(string)
+    tags                         = optional(map(string), {})
+    to_port                      = optional(number, 2049)
+  }))
+  default  = {}
+  nullable = false
 }
 
 ################################################################################
@@ -176,8 +254,24 @@ variable "security_group_rules" {
 
 variable "access_points" {
   description = "A map of access point definitions to create"
-  type        = any
-  default     = {}
+  type = map(object({
+    name = optional(string)
+    tags = optional(map(string))
+    posix_user = optional(object({
+      gid            = number
+      uid            = number
+      secondary_gids = optional(list(number))
+    }))
+    root_directory = optional(object({
+      path = optional(string)
+      creation_info = optional(object({
+        owner_gid   = number
+        owner_uid   = number
+        permissions = string
+      }))
+    }))
+  }))
+  default = {}
 }
 
 ################################################################################
@@ -208,6 +302,11 @@ variable "create_replication_configuration" {
 
 variable "replication_configuration_destination" {
   description = "A destination configuration block"
-  type        = any
-  default     = {}
+  type = object({
+    availability_zone_name = optional(string)
+    file_system_id         = optional(string)
+    kms_key_id             = optional(string)
+    region                 = optional(string)
+  })
+  default = {}
 }

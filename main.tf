@@ -14,19 +14,19 @@ resource "aws_efs_file_system" "this" {
   throughput_mode                 = var.throughput_mode
 
   dynamic "lifecycle_policy" {
-    for_each = [for k, v in var.lifecycle_policy : { (k) = v }]
+    for_each = { for k, v in var.lifecycle_policy : k => v if v != null }
 
     content {
-      transition_to_ia                    = try(lifecycle_policy.value.transition_to_ia, null)
-      transition_to_archive               = try(lifecycle_policy.value.transition_to_archive, null)
-      transition_to_primary_storage_class = try(lifecycle_policy.value.transition_to_primary_storage_class, null)
+      transition_to_ia                    = lifecycle_policy.key == "transition_to_ia" ? lifecycle_policy.value : null
+      transition_to_archive               = lifecycle_policy.key == "transition_to_archive" ? lifecycle_policy.value : null
+      transition_to_primary_storage_class = lifecycle_policy.key == "transition_to_primary_storage_class" ? lifecycle_policy.value : null
     }
   }
 
   dynamic "protection" {
-    for_each = length(var.protection) > 0 ? [var.protection] : []
+    for_each = var.protection != null ? [var.protection] : []
     content {
-      replication_overwrite = try(protection.value.replication_overwrite, null)
+      replication_overwrite = protection.value.replication_overwrite
     }
   }
 
@@ -47,18 +47,18 @@ data "aws_iam_policy_document" "policy" {
   override_policy_documents = var.override_policy_documents
 
   dynamic "statement" {
-    for_each = var.policy_statements
+    for_each = var.policy_statements != null ? var.policy_statements : []
 
     content {
-      sid           = try(statement.value.sid, null)
-      actions       = try(statement.value.actions, null)
-      not_actions   = try(statement.value.not_actions, null)
-      effect        = try(statement.value.effect, null)
-      resources     = try(statement.value.resources, [aws_efs_file_system.this[0].arn], null)
-      not_resources = try(statement.value.not_resources, null)
+      sid           = statement.value.sid
+      actions       = statement.value.actions
+      not_actions   = statement.value.not_actions
+      effect        = statement.value.effect
+      resources     = statement.value.resources != null ? statement.value.resources : [aws_efs_file_system.this[0].arn]
+      not_resources = statement.value.not_resources
 
       dynamic "principals" {
-        for_each = try(statement.value.principals, [])
+        for_each = statement.value.principals != null ? statement.value.principals : []
 
         content {
           type        = principals.value.type
@@ -67,7 +67,7 @@ data "aws_iam_policy_document" "policy" {
       }
 
       dynamic "not_principals" {
-        for_each = try(statement.value.not_principals, [])
+        for_each = statement.value.not_principals != null ? statement.value.not_principals : []
 
         content {
           type        = not_principals.value.type
@@ -76,7 +76,7 @@ data "aws_iam_policy_document" "policy" {
       }
 
       dynamic "condition" {
-        for_each = try(statement.value.conditions, statement.value.condition, [])
+        for_each = statement.value.condition != null ? statement.value.condition : []
 
         content {
           test     = condition.value.test
@@ -152,8 +152,11 @@ resource "aws_efs_mount_target" "this" {
   for_each = { for k, v in var.mount_targets : k => v if var.create }
 
   file_system_id  = aws_efs_file_system.this[0].id
-  ip_address      = try(each.value.ip_address, null)
-  security_groups = var.create_security_group ? concat([aws_security_group.this[0].id], try(each.value.security_groups, [])) : try(each.value.security_groups, null)
+  ip_address      = each.value.ip_address
+  ip_address_type = each.value.ip_address_type
+  ipv6_address    = each.value.ipv6_address
+  region          = each.value.region
+  security_groups = var.create_security_group ? concat([aws_security_group.this[0].id], each.value.security_groups) : each.value.security_groups
   subnet_id       = each.value.subnet_id
 }
 
@@ -187,25 +190,46 @@ resource "aws_security_group" "this" {
   }
 }
 
-resource "aws_security_group_rule" "this" {
-  for_each = { for k, v in var.security_group_rules : k => v if local.create_security_group }
+resource "aws_vpc_security_group_ingress_rule" "this" {
+  for_each = { for k, v in var.security_group_ingress_rules : k => v if var.security_group_ingress_rules != null && local.create_security_group }
 
-  security_group_id = aws_security_group.this[0].id
+  region = each.value.region != null ? each.value.region : var.region
 
-  description              = try(each.value.description, null)
-  type                     = try(each.value.type, "ingress")
-  from_port                = try(each.value.from_port, 2049)
-  to_port                  = try(each.value.to_port, 2049)
-  protocol                 = try(each.value.protocol, "tcp")
-  cidr_blocks              = lookup(each.value, "cidr_blocks", null)
-  ipv6_cidr_blocks         = lookup(each.value, "ipv6_cidr_blocks", null)
-  prefix_list_ids          = lookup(each.value, "prefix_list_ids", null)
-  self                     = try(each.value.self, null)
-  source_security_group_id = lookup(each.value, "source_security_group_id", null)
+  cidr_ipv4                    = each.value.cidr_ipv4
+  cidr_ipv6                    = each.value.cidr_ipv6
+  description                  = each.value.description
+  from_port                    = each.value.from_port
+  ip_protocol                  = each.value.ip_protocol
+  prefix_list_id               = each.value.prefix_list_id
+  referenced_security_group_id = each.value.referenced_security_group_id
+  security_group_id            = aws_security_group.this[0].id
+  tags = merge(
+    var.tags,
+    { "Name" = coalesce(each.value.name, "${local.security_group_name}-${each.key}") },
+    each.value.tags
+  )
+  to_port = try(coalesce(each.value.to_port, each.value.from_port), null)
+}
 
-  lifecycle {
-    create_before_destroy = true
-  }
+resource "aws_vpc_security_group_egress_rule" "this" {
+  for_each = { for k, v in var.security_group_egress_rules : k => v if var.security_group_egress_rules != null && local.create_security_group }
+
+  region = each.value.region != null ? each.value.region : var.region
+
+  cidr_ipv4                    = each.value.cidr_ipv4
+  cidr_ipv6                    = each.value.cidr_ipv6
+  description                  = each.value.description
+  from_port                    = try(coalesce(each.value.from_port, each.value.to_port), null)
+  ip_protocol                  = each.value.ip_protocol
+  prefix_list_id               = each.value.prefix_list_id
+  referenced_security_group_id = each.value.referenced_security_group_id
+  security_group_id            = aws_security_group.this[0].id
+  tags = merge(
+    var.tags,
+    { "Name" = coalesce(each.value.name, "${local.security_group_name}-${each.key}") },
+    each.value.tags
+  )
+  to_port = each.value.to_port
 }
 
 ################################################################################
@@ -218,23 +242,23 @@ resource "aws_efs_access_point" "this" {
   file_system_id = aws_efs_file_system.this[0].id
 
   dynamic "posix_user" {
-    for_each = try([each.value.posix_user], [])
+    for_each = each.value.posix_user != null ? [each.value.posix_user] : []
 
     content {
       gid            = posix_user.value.gid
       uid            = posix_user.value.uid
-      secondary_gids = try(posix_user.value.secondary_gids, null)
+      secondary_gids = posix_user.value.secondary_gids
     }
   }
 
   dynamic "root_directory" {
-    for_each = try([each.value.root_directory], [])
+    for_each = each.value.root_directory != null ? [each.value.root_directory] : []
 
     content {
-      path = try(root_directory.value.path, null)
+      path = root_directory.value.path
 
       dynamic "creation_info" {
-        for_each = try([root_directory.value.creation_info], [])
+        for_each = root_directory.value.creation_info != null ? [root_directory.value.creation_info] : []
 
         content {
           owner_gid   = creation_info.value.owner_gid
@@ -247,8 +271,8 @@ resource "aws_efs_access_point" "this" {
 
   tags = merge(
     var.tags,
-    try(each.value.tags, {}),
-    { Name = try(each.value.name, each.key) },
+    each.value.tags,
+    { Name = each.value.name != null ? each.value.name : each.key },
   )
 }
 
@@ -279,10 +303,10 @@ resource "aws_efs_replication_configuration" "this" {
     for_each = [var.replication_configuration_destination]
 
     content {
-      availability_zone_name = try(destination.value.availability_zone_name, null)
-      file_system_id         = try(destination.value.file_system_id, null)
-      kms_key_id             = try(destination.value.kms_key_id, null)
-      region                 = try(destination.value.region, null)
+      availability_zone_name = destination.value.availability_zone_name
+      file_system_id         = destination.value.file_system_id
+      kms_key_id             = destination.value.kms_key_id
+      region                 = destination.value.region
     }
   }
 }

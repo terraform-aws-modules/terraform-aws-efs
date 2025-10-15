@@ -62,11 +62,21 @@ module "efs" {
   mount_targets              = { for k, v in zipmap(local.azs, module.vpc.private_subnets) : k => { subnet_id = v } }
   security_group_description = "Example EFS security group"
   security_group_vpc_id      = module.vpc.vpc_id
-  security_group_rules = {
-    vpc = {
+  security_group_ingress_rules = {
+    vpc_1 = {
       # relying on the defaults provided for EFS/NFS (2049/TCP + ingress)
       description = "NFS ingress from VPC private subnets"
-      cidr_blocks = module.vpc.private_subnets_cidr_blocks
+      cidr_ipv4   = element(module.vpc.private_subnets_cidr_blocks, 0)
+    }
+    vpc_2 = {
+      # relying on the defaults provided for EFS/NFS (2049/TCP + ingress)
+      description = "NFS ingress from VPC private subnets"
+      cidr_ipv4   = element(module.vpc.private_subnets_cidr_blocks, 1)
+    }
+    vpc_3 = {
+      # relying on the defaults provided for EFS/NFS (2049/TCP + ingress)
+      description = "NFS ingress from VPC private subnets"
+      cidr_ipv4   = element(module.vpc.private_subnets_cidr_blocks, 2)
     }
   }
 
@@ -108,13 +118,13 @@ module "efs" {
   tags = local.tags
 }
 
-module "efs_default" {
-  source = "../.."
-
-  name = "${local.name}-default"
-
-  tags = local.tags
-}
+#module "efs_default" {
+#  source = "../.."
+#
+#  name = "${local.name}-default"
+#
+#  tags = local.tags
+#}
 
 module "efs_disabled" {
   source = "../.."
