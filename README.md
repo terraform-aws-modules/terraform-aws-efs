@@ -58,10 +58,20 @@ module "efs" {
   security_group_description = "Example EFS security group"
   security_group_vpc_id      = "vpc-1234556abcdef"
   security_group_rules = {
-    vpc = {
+    vpc_1 = {
       # relying on the defaults provided for EFS/NFS (2049/TCP + ingress)
       description = "NFS ingress from VPC private subnets"
-      cidr_blocks = ["10.99.3.0/24", "10.99.4.0/24", "10.99.5.0/24"]
+      cidr_ipv4   = "10.99.3.0/24"
+    }
+    vpc_2 = {
+      # relying on the defaults provided for EFS/NFS (2049/TCP + ingress)
+      description = "NFS ingress from VPC private subnets"
+      cidr_ipv4   = "10.99.4.0/24"
+    }
+    vpc_3 = {
+      # relying on the defaults provided for EFS/NFS (2049/TCP + ingress)
+      description = "NFS ingress from VPC private subnets"
+      cidr_ipv4   = "10.99.5.0/24"
     }
   }
 

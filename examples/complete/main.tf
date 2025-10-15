@@ -118,13 +118,13 @@ module "efs" {
   tags = local.tags
 }
 
-#module "efs_default" {
-#  source = "../.."
-#
-#  name = "${local.name}-default"
-#
-#  tags = local.tags
-#}
+module "efs_default" {
+  source = "../.."
+
+  name = "${local.name}-default"
+
+  tags = local.tags
+}
 
 module "efs_disabled" {
   source = "../.."
@@ -138,7 +138,7 @@ module "efs_disabled" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = local.name
   cidr = "10.99.0.0/18"
