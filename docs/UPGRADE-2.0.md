@@ -51,7 +51,7 @@ Please consult the `examples` directory for reference example configurations. If
 
 ```hcl
 module "efs" {
-  source  = "terraform-aws-modules/efs"
+  source  = "terraform-aws-modules/efs/aws"
   version = "~> 1.0"
 
   # Truncated for brevity ...
