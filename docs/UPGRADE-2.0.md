@@ -65,8 +65,8 @@ module "efs" {
       cidr_blocks = module.vpc.private_subnets_cidr_blocks
     }
   }
-  
-  # EFS Policy Statements 
+
+  # EFS Policy Statements
   policy_statements = [
     {
       sid     = "Example"
@@ -109,8 +109,8 @@ module "efs" {
       cidr_ipv4   = element(module.vpc.private_subnets_cidr_blocks, 2)
     }
   }
-  
-  # EFS policy statements 
+
+  # EFS policy statements
   policy_statements = {
     example = {
       sid     = "Example"

@@ -75,7 +75,7 @@ variable "lifecycle_policy" {
     transition_to_archive               = optional(string)
     transition_to_primary_storage_class = optional(string)
   })
-  default = {}
+  default  = {}
   nullable = false
 }
 
@@ -172,7 +172,7 @@ variable "mount_targets" {
     security_groups = optional(list(string), [])
     subnet_id       = string
   }))
-  default = {}
+  default  = {}
   nullable = false
 }
 
@@ -273,7 +273,7 @@ variable "access_points" {
       }))
     }))
   }))
-  default = {}
+  default  = {}
   nullable = false
 }
 

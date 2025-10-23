@@ -26,7 +26,7 @@ module "wrapper" {
   protection                                = try(each.value.protection, var.defaults.protection, null)
   provisioned_throughput_in_mibps           = try(each.value.provisioned_throughput_in_mibps, var.defaults.provisioned_throughput_in_mibps, null)
   region                                    = try(each.value.region, var.defaults.region, null)
-  replication_configuration_destination     = try(each.value.replication_configuration_destination, var.defaults.replication_configuration_destination, {})
+  replication_configuration_destination     = try(each.value.replication_configuration_destination, var.defaults.replication_configuration_destination, null)
   security_group_description                = try(each.value.security_group_description, var.defaults.security_group_description, null)
   security_group_egress_rules               = try(each.value.security_group_egress_rules, var.defaults.security_group_egress_rules, {})
   security_group_ingress_rules              = try(each.value.security_group_ingress_rules, var.defaults.security_group_ingress_rules, {})
