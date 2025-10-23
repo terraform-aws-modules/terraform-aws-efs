@@ -47,10 +47,10 @@ data "aws_iam_policy_document" "policy" {
   override_policy_documents = var.override_policy_documents
 
   dynamic "statement" {
-    for_each = var.policy_statements != null ? var.policy_statements : []
+    for_each = var.policy_statements != null ? var.policy_statements : {}
 
     content {
-      sid           = statement.value.sid
+      sid           = coalesce(statement.value.sid, statement.key)
       actions       = statement.value.actions
       not_actions   = statement.value.not_actions
       effect        = statement.value.effect
@@ -155,7 +155,7 @@ resource "aws_efs_mount_target" "this" {
   ip_address      = each.value.ip_address
   ip_address_type = each.value.ip_address_type
   ipv6_address    = each.value.ipv6_address
-  region          = each.value.region
+  region          = var.region
   security_groups = var.create_security_group ? concat([aws_security_group.this[0].id], each.value.security_groups) : each.value.security_groups
   subnet_id       = each.value.subnet_id
 }
@@ -193,7 +193,7 @@ resource "aws_security_group" "this" {
 resource "aws_vpc_security_group_ingress_rule" "this" {
   for_each = { for k, v in var.security_group_ingress_rules : k => v if var.security_group_ingress_rules != null && local.create_security_group }
 
-  region = each.value.region != null ? each.value.region : var.region
+  region = var.region
 
   cidr_ipv4                    = each.value.cidr_ipv4
   cidr_ipv6                    = each.value.cidr_ipv6
@@ -201,7 +201,7 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
   from_port                    = each.value.from_port
   ip_protocol                  = each.value.ip_protocol
   prefix_list_id               = each.value.prefix_list_id
-  referenced_security_group_id = each.value.referenced_security_group_id
+  referenced_security_group_id = each.value.referenced_security_group_id == "self" ? aws_security_group.this[0].id : each.value.referenced_security_group_id
   security_group_id            = aws_security_group.this[0].id
   tags = merge(
     var.tags,
@@ -214,7 +214,7 @@ resource "aws_vpc_security_group_ingress_rule" "this" {
 resource "aws_vpc_security_group_egress_rule" "this" {
   for_each = { for k, v in var.security_group_egress_rules : k => v if var.security_group_egress_rules != null && local.create_security_group }
 
-  region = each.value.region != null ? each.value.region : var.region
+  region = var.region
 
   cidr_ipv4                    = each.value.cidr_ipv4
   cidr_ipv6                    = each.value.cidr_ipv6
@@ -222,7 +222,7 @@ resource "aws_vpc_security_group_egress_rule" "this" {
   from_port                    = try(coalesce(each.value.from_port, each.value.to_port), null)
   ip_protocol                  = each.value.ip_protocol
   prefix_list_id               = each.value.prefix_list_id
-  referenced_security_group_id = each.value.referenced_security_group_id
+  referenced_security_group_id = each.value.referenced_security_group_id == "self" ? aws_security_group.this[0].id : each.value.referenced_security_group_id
   security_group_id            = aws_security_group.this[0].id
   tags = merge(
     var.tags,
@@ -300,7 +300,7 @@ resource "aws_efs_replication_configuration" "this" {
   source_file_system_id = aws_efs_file_system.this[0].id
 
   dynamic "destination" {
-    for_each = [var.replication_configuration_destination]
+    for_each = var.replication_configuration_destination != null ? [var.replication_configuration_destination] : []
 
     content {
       availability_zone_name = destination.value.availability_zone_name

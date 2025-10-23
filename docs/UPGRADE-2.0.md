@@ -7,6 +7,7 @@ Please consult the `examples` directory for reference example configurations. If
 - Terraform `v1.5.7` is now minimum supported version
 - AWS provider `v6.12` is now minimum supported version
 - `security_group_rules` has been split into `security_group_ingress_rules` and `security_group_egress_rules` to better match the AWS API and allow for more flexibility in defining security group rules.
+- `policy_statements` changed from type `any` to `map`
 
 ## Additional changes
 
@@ -64,6 +65,20 @@ module "efs" {
       cidr_blocks = module.vpc.private_subnets_cidr_blocks
     }
   }
+  
+  # EFS Policy Statements 
+  policy_statements = [
+    {
+      sid     = "Example"
+      actions = ["elasticfilesystem:ClientMount"]
+      principals = [
+        {
+          type        = "AWS"
+          identifiers = [data.aws_caller_identity.current.arn]
+        }
+      ]
+    }
+  ]
 }
 ```
 
@@ -92,6 +107,20 @@ module "efs" {
       # relying on the defaults provided for EFS/NFS (2049/TCP + ingress)
       description = "NFS ingress from VPC private subnets"
       cidr_ipv4   = element(module.vpc.private_subnets_cidr_blocks, 2)
+    }
+  }
+  
+  # EFS policy statements 
+  policy_statements = {
+    example = {
+      sid     = "Example"
+      actions = ["elasticfilesystem:ClientMount"]
+      principals = [
+        {
+          type        = "AWS"
+          identifiers = [data.aws_caller_identity.current.arn]
+        }
+      ]
     }
   }
 }

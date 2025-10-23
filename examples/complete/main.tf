@@ -45,8 +45,8 @@ module "efs" {
   attach_policy                             = true
   deny_nonsecure_transport_via_mount_target = false
   bypass_policy_lockout_safety_check        = false
-  policy_statements = [
-    {
+  policy_statements = {
+    example = {
       sid     = "Example"
       actions = ["elasticfilesystem:ClientMount"]
       principals = [
@@ -56,7 +56,7 @@ module "efs" {
         }
       ]
     }
-  ]
+  }
 
   # Mount targets / security group
   mount_targets              = { for k, v in zipmap(local.azs, module.vpc.private_subnets) : k => { subnet_id = v } }

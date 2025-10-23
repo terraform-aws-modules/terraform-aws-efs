@@ -76,6 +76,7 @@ variable "lifecycle_policy" {
     transition_to_primary_storage_class = optional(string)
   })
   default = {}
+  nullable = false
 }
 
 variable "protection" {
@@ -116,7 +117,7 @@ variable "override_policy_documents" {
 
 variable "policy_statements" {
   description = "A list of IAM policy [statements](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document#statement) for custom permission usage"
-  type = list(object({
+  type = map(object({
     sid           = optional(string)
     actions       = optional(list(string))
     not_actions   = optional(list(string))
@@ -172,6 +173,7 @@ variable "mount_targets" {
     subnet_id       = string
   }))
   default = {}
+  nullable = false
 }
 
 ################################################################################
@@ -256,7 +258,7 @@ variable "access_points" {
   description = "A map of access point definitions to create"
   type = map(object({
     name = optional(string)
-    tags = optional(map(string))
+    tags = optional(map(string), {})
     posix_user = optional(object({
       gid            = number
       uid            = number
@@ -272,6 +274,7 @@ variable "access_points" {
     }))
   }))
   default = {}
+  nullable = false
 }
 
 ################################################################################
@@ -308,5 +311,5 @@ variable "replication_configuration_destination" {
     kms_key_id             = optional(string)
     region                 = optional(string)
   })
-  default = {}
+  default = null
 }
