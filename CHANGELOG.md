@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+## [2.0.0](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.8.1...v2.0.0) (2025-10-24)
+
+### ⚠ BREAKING CHANGES
+
+* Upgrade AWS provider and min required Terraform version to `6.12` and `1.5.7` respectively (#45)
+
+### Features
+
+* Upgrade AWS provider and min required Terraform version to `6.12` and `1.5.7` respectively ([#45](https://github.com/terraform-aws-modules/terraform-aws-efs/issues/45)) ([91f94a4](https://github.com/terraform-aws-modules/terraform-aws-efs/commit/91f94a4c4b14bf4686f439ca458447bd20e95e99))
+
 ## [1.8.1](https://github.com/terraform-aws-modules/terraform-aws-efs/compare/v1.8.0...v1.8.1) (2025-10-21)
 
 ### Bug Fixes
