@@ -45,8 +45,8 @@ module "efs" {
   attach_policy                             = true
   deny_nonsecure_transport_via_mount_target = false
   bypass_policy_lockout_safety_check        = false
-  policy_statements = [
-    {
+  policy_statements = {
+    example = {
       sid     = "Example"
       actions = ["elasticfilesystem:ClientMount"]
       principals = [
@@ -56,17 +56,27 @@ module "efs" {
         }
       ]
     }
-  ]
+  }
 
   # Mount targets / security group
   mount_targets              = { for k, v in zipmap(local.azs, module.vpc.private_subnets) : k => { subnet_id = v } }
   security_group_description = "Example EFS security group"
   security_group_vpc_id      = module.vpc.vpc_id
-  security_group_rules = {
-    vpc = {
+  security_group_ingress_rules = {
+    vpc_1 = {
       # relying on the defaults provided for EFS/NFS (2049/TCP + ingress)
       description = "NFS ingress from VPC private subnets"
-      cidr_blocks = module.vpc.private_subnets_cidr_blocks
+      cidr_ipv4   = element(module.vpc.private_subnets_cidr_blocks, 0)
+    }
+    vpc_2 = {
+      # relying on the defaults provided for EFS/NFS (2049/TCP + ingress)
+      description = "NFS ingress from VPC private subnets"
+      cidr_ipv4   = element(module.vpc.private_subnets_cidr_blocks, 1)
+    }
+    vpc_3 = {
+      # relying on the defaults provided for EFS/NFS (2049/TCP + ingress)
+      description = "NFS ingress from VPC private subnets"
+      cidr_ipv4   = element(module.vpc.private_subnets_cidr_blocks, 2)
     }
   }
 
@@ -128,7 +138,7 @@ module "efs_disabled" {
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
-  version = "~> 5.0"
+  version = "~> 6.0"
 
   name = local.name
   cidr = "10.99.0.0/18"
