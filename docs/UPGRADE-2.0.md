@@ -132,7 +132,7 @@ Due to the change from `aws_security_group_rule` to `aws_vpc_security_group_ingr
 
 ```sh
 terraform state rm 'module.efs.aws_security_group_rule.this["vpc"]'
-terraform state import 'module.efs.aws_vpc_security_group_ingress_rule.this["vpc_1"]' 'sg-xxx'
-terraform state import 'module.efs.aws_vpc_security_group_ingress_rule.this["vpc_2"]' 'sg-xxx'
-terraform state import 'module.efs.aws_vpc_security_group_ingress_rule.this["vpc_3"]' 'sg-xxx'
+terraform state import 'module.efs.aws_vpc_security_group_ingress_rule.this["vpc_1"]' 'sgr-xxx'
+terraform state import 'module.efs.aws_vpc_security_group_ingress_rule.this["vpc_2"]' 'sgr-xxx'
+terraform state import 'module.efs.aws_vpc_security_group_ingress_rule.this["vpc_3"]' 'sgr-xxx'
 ```
