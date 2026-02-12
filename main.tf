@@ -30,6 +30,8 @@ resource "aws_efs_file_system" "this" {
     }
   }
 
+  region = var.region
+
   tags = merge(
     var.tags,
     { Name = var.name },
@@ -142,6 +144,7 @@ resource "aws_efs_file_system_policy" "this" {
   file_system_id                     = aws_efs_file_system.this[0].id
   bypass_policy_lockout_safety_check = var.bypass_policy_lockout_safety_check
   policy                             = data.aws_iam_policy_document.policy[0].json
+  region                             = var.region
 }
 
 ################################################################################
@@ -177,6 +180,7 @@ resource "aws_security_group" "this" {
   name_prefix = var.security_group_use_name_prefix ? "${local.security_group_name}-" : null
   description = var.security_group_description
 
+  region                 = var.region
   revoke_rules_on_delete = true
   vpc_id                 = var.security_group_vpc_id
 
@@ -251,6 +255,8 @@ resource "aws_efs_access_point" "this" {
     }
   }
 
+  region = var.region
+
   dynamic "root_directory" {
     for_each = each.value.root_directory != null ? [each.value.root_directory] : []
 
@@ -288,6 +294,8 @@ resource "aws_efs_backup_policy" "this" {
   backup_policy {
     status = var.enable_backup_policy ? "ENABLED" : "DISABLED"
   }
+
+  region = var.region
 }
 
 ################################################################################
@@ -309,4 +317,6 @@ resource "aws_efs_replication_configuration" "this" {
       region                 = destination.value.region
     }
   }
+
+  region = var.region
 }
