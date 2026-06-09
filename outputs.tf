@@ -17,11 +17,6 @@ output "dns_name" {
   value       = try(aws_efs_file_system.this[0].dns_name, null)
 }
 
-output "size_in_bytes" {
-  description = "The latest known metered size (in bytes) of data stored in the file system, the value is not the exact size that the file system was at any point in time"
-  value       = try(aws_efs_file_system.this[0].size_in_bytes, null)
-}
-
 ################################################################################
 # Mount Target(s)
 ################################################################################

@@ -17,11 +17,6 @@ output "dns_name" {
   value       = module.efs.dns_name
 }
 
-output "size_in_bytes" {
-  description = "The latest known metered size (in bytes) of data stored in the file system, the value is not the exact size that the file system was at any point in time"
-  value       = module.efs.size_in_bytes
-}
-
 ################################################################################
 # Mount Target(s)
 ################################################################################
